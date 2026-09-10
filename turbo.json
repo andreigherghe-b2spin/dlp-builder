@@ -1,0 +1,45 @@
+{
+  "$schema": "https://turbo.build/schema.json",
+  "globalDependencies": [
+    "pnpm-workspace.yaml",
+    "pnpm-lock.yaml",
+    ".prettierrc.json",
+    "eslint.config.js",
+    "packages/eslint-config/**"
+  ],
+  "tasks": {
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "storybook-static/**"]
+    },
+    "dev": {
+      "cache": false,
+      "persistent": true
+    },
+    "lint": {
+      "dependsOn": ["^build"],
+      "inputs": ["**/*.{ts,tsx,js,jsx,mjs,cjs}", "eslint.config.*", "!dist/**"],
+      "outputs": []
+    },
+    "lint:fix": {
+      "cache": false,
+      "outputs": []
+    },
+    "typecheck": {
+      "dependsOn": ["^build"],
+      "outputs": []
+    },
+    "test": {
+      "inputs": [
+        "**/*.ts",
+        "**/*.tsx",
+        "**/*.js",
+        "vitest.config.*",
+        "vitest.setup.*",
+        "!dist/**",
+        "!coverage/**"
+      ],
+      "outputs": ["coverage/**"]
+    }
+  }
+}

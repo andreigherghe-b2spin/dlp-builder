@@ -1,0 +1,43 @@
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+
+node_modules
+dist
+dist-ssr
+*.local
+
+# Editor directories and files
+.vscode/*
+!.vscode/extensions.json
+.idea
+.DS_Store
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+*storybook.log
+storybook-static
+
+# `prod` is the shared baseline and is committed. Every other tag is somebody's
+# scratch set, and none of them are listed here — they are untracked, not ignored.
+#
+# There is no rule that would do it. "All of snapshots/ except prod" needs
+# `snapshots/*` plus a negation, and git cannot re-include a path whose parent
+# directory an earlier pattern excluded — so the negation brings back the `prod`
+# directory entry but not the files under it, and a genuinely new baseline (every
+# shot of a newly added theme) silently stops appearing in `git status`. That is
+# strictly worse than the noise it removes. Both patterns were tried and reverted.
+#
+# So: `git add -A` after a tagged run will stage somebody's scratch set. Stage the
+# paths you mean, or drop the tag directory when you are done with it.
+playwright/reports
+playwright-build
+test-results

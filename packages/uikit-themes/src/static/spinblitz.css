@@ -1,0 +1,138 @@
+/* Design System v2 — Figma semantic colors */
+:root {
+  --color-background-backdrop: var(--color-custom-transparent-black-600);
+  --color-background-brand-accent1container: var(--color-custom-spin-blitz-main-500);
+  --color-background-brand-accent2container: var(--color-white);
+  --color-background-brand-gold-coins-container: var(--color-amber-500);
+  --color-background-brand-primary-container: var(--color-custom-spin-blitz-main-500);
+  --color-background-brand-secondary-container: var(--color-custom-spin-blitz-complementary-500);
+  --color-background-brand-sweepstakes-coins-container: var(--color-green-500);
+  --color-background-feedback-informative-container: var(--color-blue-400);
+  --color-background-feedback-negative-container: var(--color-red-700);
+  --color-background-feedback-positive-container: var(--color-green-600);
+  --color-background-feedback-warning-container: var(--color-amber-500);
+  --color-background-layout-inverted: var(--color-zinc-50);
+  --color-background-layout-page: var(--color-custom-spin-blitz-complementary-700);
+  --color-background-layout-surface: var(--color-custom-spin-blitz-complementary-800);
+  --color-background-layout-surface-overlay: var(--color-custom-transparent-white-100);
+  --color-background-layout-surface-variant1: var(--color-custom-spin-blitz-complementary-900);
+  --color-background-state-disabled: var(--color-custom-spin-blitz-complementary-600);
+  --color-background-state-hover: var(--color-custom-transparent-black-400);
+  --color-background-state-pressed: var(--color-custom-transparent-black-200);
+  --color-background-state-selected: var(--color-custom-transparent-black-200);
+  --color-border-brand-accent1: var(--color-custom-spin-blitz-main-500);
+  --color-border-brand-accent2: var(--color-white);
+  --color-border-brand-gold-coins: var(--color-amber-400);
+  --color-border-brand-on-accent1container: var(--color-custom-transparent-black-100);
+  --color-border-brand-on-accent2container: var(--color-custom-transparent-black-100);
+  --color-border-brand-on-gold-coins-container: var(--color-amber-400);
+  --color-border-brand-on-primary-container: var(--color-custom-transparent-white-400);
+  --color-border-brand-on-secondary-container: var(--color-custom-transparent-white-400);
+  --color-border-brand-on-sweepstakes-coins-container: var(--color-green-400);
+  --color-border-brand-primary: var(--color-custom-spin-blitz-main-500);
+  --color-border-brand-secondary: var(--color-custom-spin-blitz-complementary-500);
+  --color-border-brand-sweepstakes-coins: var(--color-green-400);
+  --color-border-feedback-informative: var(--color-blue-300);
+  --color-border-feedback-negative: var(--color-rose-500);
+  --color-border-feedback-positive: var(--color-emerald-400);
+  --color-border-feedback-warning: var(--color-amber-400);
+  --color-border-neutral-default: var(--color-custom-transparent-white-400);
+  --color-border-neutral-strong: var(--color-custom-transparent-white-800);
+  --color-border-neutral-subtle: var(--color-custom-transparent-white-200);
+  --color-border-state-active: var(--color-white);
+  --color-border-state-focus: var(--color-yellow-400);
+  --color-foreground-brand-accent1: var(--color-custom-spin-blitz-main-500);
+  --color-foreground-brand-accent2: var(--color-white);
+  --color-foreground-brand-gold-coins: var(--color-amber-400);
+  --color-foreground-brand-on-accent1container: var(--color-white);
+  --color-foreground-brand-on-accent2container: var(--color-custom-spin-blitz-complementary-900);
+  --color-foreground-brand-on-gold-coins-container: var(--color-black);
+  --color-foreground-brand-on-primary-container: var(--color-white);
+  --color-foreground-brand-on-secondary-container: var(--color-white);
+  --color-foreground-brand-on-sweepstakes-coins-container: var(--color-black);
+  --color-foreground-brand-primary: var(--color-custom-spin-blitz-main-500);
+  --color-foreground-brand-secondary: var(--color-custom-spin-blitz-complementary-500);
+  --color-foreground-brand-sweepstakes-coins: var(--color-green-400);
+  --color-foreground-feedback-informative: var(--color-blue-300);
+  --color-foreground-feedback-negative: var(--color-red-300);
+  --color-foreground-feedback-on-informative-container: var(--color-black);
+  --color-foreground-feedback-on-negative-container: var(--color-white);
+  --color-foreground-feedback-on-positive-container: var(--color-black);
+  --color-foreground-feedback-on-warning-container: var(--color-black);
+  --color-foreground-feedback-positive: var(--color-emerald-300);
+  --color-foreground-feedback-warning: var(--color-amber-300);
+  --color-foreground-on-inverted-default: var(--color-custom-spin-blitz-complementary-950);
+  --color-foreground-on-inverted-muted: var(--color-zinc-500);
+  --color-foreground-on-page-default: var(--color-white);
+  --color-foreground-on-page-muted: var(--color-custom-spin-blitz-complementary-300);
+  --color-foreground-on-surface-default: var(--color-white);
+  --color-foreground-on-surface-muted: var(--color-custom-spin-blitz-complementary-300);
+  --color-foreground-state-active: var(--color-white);
+  --color-foreground-state-disabled: var(--color-custom-transparent-white-300);
+  --color-jackpot-gold-coins: var(--color-sky-300);
+  --color-jackpot-grand: var(--color-red-300);
+  --color-jackpot-major: var(--color-green-300);
+  --color-jackpot-mini: var(--color-violet-300);
+  --color-jackpot-minor: var(--color-blue-300);
+  --color-jackpot-sweepstakes-coins: var(--color-green-200);
+}
+
+/* Design System v2 — radius / border scale, component aliases, typography */
+:root {
+  --radius-none: var(--radius-rounded-none);
+  --radius-compact: var(--radius-rounded-4);
+  --radius-comfortable: var(--radius-rounded-8);
+  --radius-base: var(--radius-rounded-12);
+  --radius-offset4: var(--radius-rounded-16);
+  --radius-offset8: var(--radius-rounded-20);
+  --radius-offset12: var(--radius-rounded-24);
+  --radius-offset16: var(--radius-rounded-28);
+  --radius-offset24: var(--radius-rounded-36);
+  --border-button: var(--border-width-border-1);
+  --border-card: var(--border-width-border-0);
+  --border-textfield: var(--border-width-border-1);
+  --components-badge-radius: var(--radius-compact);
+  --components-button-border: var(--border-button);
+  --components-button-radius: var(--radius-base);
+  --components-card-border: var(--border-card);
+  --components-card-radius: var(--radius-offset8);
+  --components-textfield-border: var(--border-textfield);
+  --components-textfield-radius: var(--radius-base);
+  --components-border-icon: var(--border-width-border-2);
+  --shadow-md: 0 2px 4px -1px #0000000f, 0 4px 6px -1px #0000001a;
+  --typography-font-family: Radio Canada;
+  --typography-font-weight-bold: 700;
+  --typography-font-weight-medium: 500;
+  --typography-font-weight-regular: 400;
+  --typography-font-weight-semibold: 600;
+  --typography-font-size-body-xs: 10px;
+  --typography-font-size-body-l: 16px;
+  --typography-font-size-body-m: 14px;
+  --typography-font-size-body-s: 12px;
+  --typography-font-size-caption-m: 10px;
+  --typography-font-size-display-l: 48px;
+  --typography-font-size-display-m: 40px;
+  --typography-font-size-display-s: 36px;
+  --typography-font-size-display-xl: 56px;
+  --typography-font-size-heading-l: 24px;
+  --typography-font-size-heading-m: 22px;
+  --typography-font-size-heading-s: 20px;
+  --typography-font-size-heading-xl: 28px;
+  --typography-font-size-heading-xs: 18px;
+  --typography-font-size-label-l: 16px;
+  --typography-font-size-label-m: 14px;
+  --typography-font-size-label-s: 12px;
+  --typography-font-size-label-xl: 18px;
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --typography-font-size-display-l: 64px;
+    --typography-font-size-display-m: 48px;
+    --typography-font-size-display-s: 40px;
+    --typography-font-size-display-xl: 80px;
+    --typography-font-size-heading-l: 28px;
+    --typography-font-size-heading-m: 24px;
+    --typography-font-size-heading-xl: 32px;
+  }
+}

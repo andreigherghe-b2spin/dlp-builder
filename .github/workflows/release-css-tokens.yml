@@ -1,0 +1,70 @@
+name: Release CSS Tokens
+
+on:
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: "Release reason (optional)"
+        required: false
+        default: "manual release"
+  push:
+    branches:
+      - main
+    paths:
+      - "packages/uikit-themes/src/generated/**/*.css"
+
+jobs:
+  release:
+    name: Build & Publish
+    runs-on: ubuntu-latest
+    # On push: only run when commit message contains [release]
+    if: github.event_name == 'workflow_dispatch' || contains(github.event.head_commit.message, '[release]')
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install dependencies from Artifact Registry
+        uses: patrianna/release-cicd/.github/actions/npm-install-artifact-registry@main
+        with:
+          package-manager: pnpm
+          gcp-credentials: ${{ secrets.PATRIANNA_DEV_ARTIFACTORY_REGISTRY_NPM }}
+
+      - name: Create changeset for CSS token update
+        run: |
+          THEMES=$(node -p "require('./packages/uikit-themes/package.json').name")
+          COMMIT_MSG="${{ github.event_name == 'workflow_dispatch' && inputs.reason || github.event.head_commit.message }}"
+          CHANGESET_ID="css-tokens-${GITHUB_SHA:0:8}"
+
+          cat > ".changeset/${CHANGESET_ID}.md" <<EOF
+          ---
+          "${THEMES}": patch
+          ---
+
+          [release] CSS token update: ${COMMIT_MSG}
+          EOF
+
+          echo "Created changeset: .changeset/${CHANGESET_ID}.md"
+
+      - name: Build themes
+        run: pnpm --filter @ui/themes build
+
+      - name: Apply version bumps
+        run: pnpm changeset version
+
+      - name: Publish to registry
+        run: pnpm changeset publish
+
+      - name: Commit and push version changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add packages/ .changeset/
+          git diff --staged --quiet || git commit -m "chore: release CSS token update [skip ci]"
+          git push

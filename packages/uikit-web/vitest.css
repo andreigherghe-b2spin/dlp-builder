@@ -1,0 +1,17 @@
+/*
+ * The components' own classes, compiled.
+ *
+ * Layout is what these tests measure — `basis-(--carousel-slide-size)` on a
+ * slide, the `-ml-2` gutter on the track, `overflow-hidden` on the viewport —
+ * and none of it exists as CSS until Tailwind builds it from the sources. Without
+ * this every slide would be auto-width, Embla would measure a track it can see
+ * all of, and a carousel that cannot scroll passes every test by doing nothing.
+ *
+ * Brand tokens are deliberately absent. They decide colours and radii, which is
+ * the visual suite's business, and pulling `@ui/themes` in here would make a
+ * behaviour test fail on a palette change.
+ */
+@import "tailwindcss";
+
+/* Includes the test files, so a class a fixture needs — `basis-1/3` — is built. */
+@source "./src";

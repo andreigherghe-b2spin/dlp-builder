@@ -1,0 +1,58 @@
+{
+  "name": "@ui/native",
+  "version": "0.0.1",
+  "type": "module",
+  "sideEffects": false,
+  "files": [
+    "dist"
+  ],
+  "exports": {
+    "./*": {
+      "types": "./dist/components/ui/*.d.ts",
+      "import": "./dist/components/ui/*.js"
+    },
+    "./utils": {
+      "types": "./dist/lib/utils.d.ts",
+      "import": "./dist/lib/utils.js"
+    }
+  },
+  "scripts": {
+    "build": "tsup",
+    "dev": "tsup --watch",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "typecheck": "tsc --noEmit -p tsconfig.lint.json",
+    "test": "echo \"TODO: configure test\""
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-native": ">=0.76",
+    "react-native-reanimated": ">=4.0.0",
+    "uniwind": ">=1.6.3"
+  },
+  "dependencies": {
+    "@rn-primitives/aspect-ratio": "^1.4.0",
+    "@rn-primitives/avatar": "^1.4.0",
+    "@rn-primitives/checkbox": "^1.4.0",
+    "@rn-primitives/progress": "^1.4.0",
+    "@rn-primitives/radio-group": "^1.4.0",
+    "@rn-primitives/separator": "^1.4.0",
+    "@rn-primitives/slot": "^1.4.0",
+    "@rn-primitives/switch": "^1.4.0",
+    "@rn-primitives/tabs": "^1.4.0",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
+    "lucide-react-native": "^0.556.0",
+    "tailwind-merge": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "catalog:",
+    "@types/react": "catalog:",
+    "@ui/eslint-config": "workspace:*",
+    "eslint": "^9.39.4",
+    "react": "catalog:",
+    "react-native": "catalog:",
+    "tsup": "^8.5.1",
+    "uniwind": "^1.6.3"
+  }
+}

@@ -1,0 +1,32 @@
+packages:
+  - "apps/*"
+  - "packages/*"
+
+# Expo SDK 55 fully supports pnpm's default isolated installs and
+# autolinking-module-resolution is on by default in monorepos.
+# If a native lib later misbehaves with strict isolation, fall back with:
+#   nodeLinker: hoisted
+# https://docs.expo.dev/guides/monorepos/#package-managers-with-isolated-dependencies
+
+# pnpm v10 blocks postinstall scripts by default. Allow only what we need:
+# - esbuild: downloads its native binary (used by vite/vitest in storybook-web)
+# - unrs-resolver: native Rust resolver used by ESLint import resolution
+onlyBuiltDependencies:
+  - esbuild
+  - unrs-resolver
+
+# pnpm Catalog — single source of truth for the packages Expo explicitly
+# warns must NOT have duplicate versions in a monorepo:
+#   - React, React DOM
+#   - React Native
+#   - @types/react (shared TS types)
+# Combined with the root `resolutions` (tree-wide enforcement), this
+# guarantees one version of each runtime-critical package across the repo.
+# https://docs.expo.dev/guides/monorepos/#duplicate-native-packages-within-monorepos
+# https://pnpm.io/catalogs
+catalog:
+  react: 19.2.6
+  react-dom: 19.2.6
+  "@types/react": ~19.2.14
+  "@types/node": ~24.12.3
+  react-native: 0.83.6

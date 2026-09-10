@@ -1,0 +1,424 @@
+@utility scrollbar-hidden {
+  /* Both, because they are different browsers: the pseudo-element is WebKit and
+     Blink, `scrollbar-width` is the standard property Firefox has and Chrome
+     took up in 121. With only the first, Firefox paints a scrollbar under the
+     tabs — and the visual suite runs Chromium, so nothing here would catch it. */
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
+@utility button-base {
+  background-origin: border-box;
+  border-style: solid;
+  outline-style: none;
+
+  /* Icon-only buttons are square. The height is fixed and includes the border,
+     the width grows from the content, so without this the two borders land in
+     the width alone — 34×32 where Figma draws 32×32. A ratio only fills in a
+     dimension that is `auto`, so an explicit width from outside still wins. */
+  &:has(> svg:only-child) {
+    aspect-ratio: 1;
+  }
+
+  &:hover,
+  &:focus-visible {
+    background-image: linear-gradient(
+      0deg,
+      var(--color-background-state-hover) 0%,
+      var(--color-background-state-hover) 100%
+    );
+  }
+
+  &:active {
+    background-image: linear-gradient(
+      0deg,
+      var(--color-background-state-pressed) 0%,
+      var(--color-background-state-pressed) 100%
+    );
+  }
+
+  &:focus-visible::after {
+    content: "";
+    position: absolute;
+    inset: calc(var(--spacing) * -1.25);
+    border: var(--border-width-border-4) solid var(--color-border-state-focus);
+    pointer-events: none;
+  }
+
+  /* `:disabled` matches form controls only, and `asChild` turns these into
+     whatever the caller passed — an `<a>`, most often. Radix marks such an
+     element `data-disabled` for exactly this reason, so both are read here or a
+     disabled link keeps its hover, its focus ring and its click.
+
+     The `:not()` is not defensive spelling — presence is only Radix's dialect.
+     Radix writes the attribute when it means it and omits it otherwise, but a
+     component passing `data-disabled={someBoolean}` renders the string "false",
+     and a presence selector reads that as disabled. Sonner's close button does
+     exactly that, and a bare `[data-disabled]` put `pointer-events: none` on a
+     button whose entire job is to be clicked. */
+  &:is(:disabled, [data-disabled]:not([data-disabled="false"])) {
+    pointer-events: none;
+    box-shadow: none;
+
+    &::after {
+      display: none;
+    }
+  }
+
+  & svg {
+    pointer-events: none;
+    flex-shrink: 0;
+  }
+}
+
+@utility tab-base {
+  @apply button-base;
+
+  /* The same 4px ring `button-base` draws, moved inside the pill. A tab bar is
+     a scroll container, and a scroll container clips on both axes whatever
+     `overflow-y` says — a ring drawn 5px outside the pill is sliced off top and
+     bottom. Inside, the bar needs no padding to make room for it and stays the
+     36px Figma draws. The radius is inherited so it follows the pill rather
+     than cutting its corners. */
+  &:focus-visible::after {
+    inset: 0;
+    border-radius: inherit;
+  }
+
+  border-style: solid;
+  border-width: var(--border-width-border-2);
+  border-color: transparent;
+  border-radius: var(--radius-base);
+
+  background-color: var(--color-background-layout-surface-variant1);
+  color: var(--color-foreground-on-surface-muted);
+
+  /* The type is not here: Figma's `Label/Small/Bold` is a named text style, and
+     the component takes it from `labelVariants` so a tab and `TypographyLabel`
+     cannot drift apart. */
+  white-space: nowrap;
+
+  cursor: pointer;
+  user-select: none;
+  transition: all var(--default-transition-duration) var(--default-transition-timing-function);
+
+  /* The selected tab keeps its wash through hover and press. Figma draws no
+     hover for `Active=On` — the only state it has is Default — and pressing a
+     tab that is already selected does nothing, so feedback would be promising
+     something that will not happen.
+
+     The three selectors are spelled out rather than left to source order:
+     `button-base`'s `:hover` and `:active` write the same `background-image` at
+     the same specificity, and whichever came last in the sheet would win. This
+     way the design's answer is in the code instead of in the file order. */
+  &[data-state="active"],
+  &[data-state="active"]:hover,
+  &[data-state="active"]:active {
+    border-color: var(--color-border-state-active);
+    background-image: linear-gradient(
+      0deg,
+      var(--color-background-state-selected) 0%,
+      var(--color-background-state-selected) 100%
+    );
+    color: var(--color-foreground-on-surface-default);
+  }
+
+  /* Both, for the same reason `button-base` reads both: a `TabsTrigger asChild`
+     wrapping a link is the documented way to build a navigation bar, and it is
+     an `<a>` that `:disabled` will never match. And `:not([data-disabled=false])`
+     for the same reason too — see the note above `button-base`'s copy. */
+  &:is(:disabled, [data-disabled]:not([data-disabled="false"])) {
+    border-color: transparent;
+    background-color: var(--color-background-state-disabled);
+    background-image: none;
+    color: var(--color-foreground-state-disabled);
+  }
+
+  & svg:not([class*="size-"]) {
+    width: calc(var(--spacing) * 4);
+    height: calc(var(--spacing) * 4);
+  }
+}
+
+@theme inline {
+  --color-background-backdrop: var(--color-background-backdrop);
+  --color-background-brand-accent1container: var(--color-background-brand-accent1container);
+  --color-background-brand-accent2container: var(--color-background-brand-accent2container);
+  --color-background-brand-gold-coins-container: var(--color-background-brand-gold-coins-container);
+  --color-background-brand-primary-container: var(--color-background-brand-primary-container);
+  --color-background-brand-secondary-container: var(--color-background-brand-secondary-container);
+  --color-background-brand-sweepstakes-coins-container: var(
+    --color-background-brand-sweepstakes-coins-container
+  );
+  --color-background-feedback-informative-container: var(
+    --color-background-feedback-informative-container
+  );
+  --color-background-feedback-negative-container: var(
+    --color-background-feedback-negative-container
+  );
+  --color-background-feedback-positive-container: var(
+    --color-background-feedback-positive-container
+  );
+  --color-background-feedback-warning-container: var(--color-background-feedback-warning-container);
+  --color-background-layout-inverted: var(--color-background-layout-inverted);
+  --color-background-layout-page: var(--color-background-layout-page);
+  --color-background-layout-surface: var(--color-background-layout-surface);
+  --color-background-layout-surface-overlay: var(--color-background-layout-surface-overlay);
+  --color-background-layout-surface-variant1: var(--color-background-layout-surface-variant1);
+  --color-background-state-disabled: var(--color-background-state-disabled);
+  --color-background-state-hover: var(--color-background-state-hover);
+  --color-background-state-pressed: var(--color-background-state-pressed);
+  --color-background-state-selected: var(--color-background-state-selected);
+  --color-border-brand-accent1: var(--color-border-brand-accent1);
+  --color-border-brand-accent2: var(--color-border-brand-accent2);
+  --color-border-brand-gold-coins: var(--color-border-brand-gold-coins);
+  --color-border-brand-on-accent1container: var(--color-border-brand-on-accent1container);
+  --color-border-brand-on-accent2container: var(--color-border-brand-on-accent2container);
+  --color-border-brand-on-gold-coins-container: var(--color-border-brand-on-gold-coins-container);
+  --color-border-brand-on-primary-container: var(--color-border-brand-on-primary-container);
+  --color-border-brand-on-secondary-container: var(--color-border-brand-on-secondary-container);
+  --color-border-brand-on-sweepstakes-coins-container: var(
+    --color-border-brand-on-sweepstakes-coins-container
+  );
+  --color-border-brand-primary: var(--color-border-brand-primary);
+  --color-border-brand-secondary: var(--color-border-brand-secondary);
+  --color-border-brand-sweepstakes-coins: var(--color-border-brand-sweepstakes-coins);
+  --color-border-feedback-informative: var(--color-border-feedback-informative);
+  --color-border-feedback-negative: var(--color-border-feedback-negative);
+  --color-border-feedback-positive: var(--color-border-feedback-positive);
+  --color-border-feedback-warning: var(--color-border-feedback-warning);
+  --color-border-neutral-default: var(--color-border-neutral-default);
+  --color-border-neutral-strong: var(--color-border-neutral-strong);
+  --color-border-neutral-subtle: var(--color-border-neutral-subtle);
+  --color-border-state-active: var(--color-border-state-active);
+  --color-border-state-focus: var(--color-border-state-focus);
+  --color-foreground-brand-accent1: var(--color-foreground-brand-accent1);
+  --color-foreground-brand-accent2: var(--color-foreground-brand-accent2);
+  --color-foreground-brand-gold-coins: var(--color-foreground-brand-gold-coins);
+  --color-foreground-brand-on-accent1container: var(--color-foreground-brand-on-accent1container);
+  --color-foreground-brand-on-accent2container: var(--color-foreground-brand-on-accent2container);
+  --color-foreground-brand-on-gold-coins-container: var(
+    --color-foreground-brand-on-gold-coins-container
+  );
+  --color-foreground-brand-on-primary-container: var(--color-foreground-brand-on-primary-container);
+  --color-foreground-brand-on-secondary-container: var(
+    --color-foreground-brand-on-secondary-container
+  );
+  --color-foreground-brand-on-sweepstakes-coins-container: var(
+    --color-foreground-brand-on-sweepstakes-coins-container
+  );
+  --color-foreground-brand-primary: var(--color-foreground-brand-primary);
+  --color-foreground-brand-secondary: var(--color-foreground-brand-secondary);
+  --color-foreground-brand-sweepstakes-coins: var(--color-foreground-brand-sweepstakes-coins);
+  --color-foreground-feedback-informative: var(--color-foreground-feedback-informative);
+  --color-foreground-feedback-negative: var(--color-foreground-feedback-negative);
+  --color-foreground-feedback-on-informative-container: var(
+    --color-foreground-feedback-on-informative-container
+  );
+  --color-foreground-feedback-on-negative-container: var(
+    --color-foreground-feedback-on-negative-container
+  );
+  --color-foreground-feedback-on-positive-container: var(
+    --color-foreground-feedback-on-positive-container
+  );
+  --color-foreground-feedback-on-warning-container: var(
+    --color-foreground-feedback-on-warning-container
+  );
+  --color-foreground-feedback-positive: var(--color-foreground-feedback-positive);
+  --color-foreground-feedback-warning: var(--color-foreground-feedback-warning);
+  --color-foreground-on-inverted-default: var(--color-foreground-on-inverted-default);
+  --color-foreground-on-inverted-muted: var(--color-foreground-on-inverted-muted);
+  --color-foreground-on-page-default: var(--color-foreground-on-page-default);
+  --color-foreground-on-page-muted: var(--color-foreground-on-page-muted);
+  --color-foreground-on-surface-default: var(--color-foreground-on-surface-default);
+  --color-foreground-on-surface-muted: var(--color-foreground-on-surface-muted);
+  --color-foreground-state-active: var(--color-foreground-state-active);
+  --color-foreground-state-disabled: var(--color-foreground-state-disabled);
+  --color-jackpot-gold-coins: var(--color-jackpot-gold-coins);
+  --color-jackpot-grand: var(--color-jackpot-grand);
+  --color-jackpot-major: var(--color-jackpot-major);
+  --color-jackpot-mini: var(--color-jackpot-mini);
+  --color-jackpot-minor: var(--color-jackpot-minor);
+  --color-jackpot-sweepstakes-coins: var(--color-jackpot-sweepstakes-coins);
+  --radius-none: var(--radius-none);
+  --radius-compact: var(--radius-compact);
+  --radius-comfortable: var(--radius-comfortable);
+  --radius-base: var(--radius-base);
+  --radius-offset4: var(--radius-offset4);
+  --radius-offset8: var(--radius-offset8);
+  --radius-offset12: var(--radius-offset12);
+  --radius-offset16: var(--radius-offset16);
+  --radius-offset24: var(--radius-offset24);
+  --shadow-md: var(--shadow-md);
+
+  /* The disclosure animation behind `Collapsible`. It lives here rather than in
+     `animations.css` because that file is a separate import and this one is every
+     brand app's required one — a component's own chrome must not depend on which
+     optional stylesheet a consumer happened to add, the way `button-base` above
+     does not.
+
+     Named `expand`/`collapse` rather than `tw-animate-css`'s `collapsible-down` and
+     `collapsible-up`, which Storybook also loads. Same names would mean two live
+     definitions of one keyframe and last-import-wins deciding which runs; different
+     names mean the one being used is the one written here.
+
+     What tw-animate-css's version does not do is the padding, and the panel has 4px
+     of it at the compact size and 16px at the large one. `height: 0` on a border-box
+     element is clamped up to its own padding, so a plain height animation starts and
+     ends with a 32px block already on screen. Animating the two paddings alongside it
+     is what makes the panel actually reach zero.
+
+     Only `from` names them on the way in and only `to` on the way out — an omitted
+     property in the other keyframe animates to the element's own computed value, so
+     the padding a size sets is never restated here. */
+  --animate-collapsible-expand: collapsible-expand 200ms ease-out;
+  --animate-collapsible-collapse: collapsible-collapse 200ms ease-out;
+
+  @keyframes collapsible-expand {
+    from {
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+
+    to {
+      height: var(--radix-collapsible-content-height);
+    }
+  }
+
+  @keyframes collapsible-collapse {
+    from {
+      height: var(--radix-collapsible-content-height);
+    }
+
+    to {
+      height: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+    }
+  }
+
+  --animate-caret-blink: caret-blink 1s step-end infinite;
+
+  @keyframes caret-blink {
+    0%,
+    100% {
+      opacity: 1;
+    }
+
+    50% {
+      opacity: 0;
+    }
+  }
+}
+
+/* Figma primitives that extend Tailwind's default theme. */
+@theme static {
+  /* McLuck additional colors */
+  --color-custom-mc-luck-main-50: #fff1f5;
+  --color-custom-mc-luck-main-100: #ffe4ea;
+  --color-custom-mc-luck-main-200: #ffc8d5;
+  --color-custom-mc-luck-main-300: #ffa1ba;
+  --color-custom-mc-luck-main-400: #ff6e91;
+  --color-custom-mc-luck-main-500: #fa114f;
+  --color-custom-mc-luck-main-600: #bc0d3b;
+  --color-custom-mc-luck-main-700: #990a31;
+  --color-custom-mc-luck-main-800: #7d0828;
+  --color-custom-mc-luck-main-900: #5a061d;
+  --color-custom-mc-luck-main-950: #3f0414;
+  --color-custom-mc-luck-complementary-50: #f0fff4;
+  --color-custom-mc-luck-complementary-100: #dcfce7;
+  --color-custom-mc-luck-complementary-200: #bbf7d0;
+  --color-custom-mc-luck-complementary-300: #86efac;
+  --color-custom-mc-luck-complementary-400: #4ade80;
+  --color-custom-mc-luck-complementary-500: #00ff41;
+  --color-custom-mc-luck-complementary-600: #00bf31;
+  --color-custom-mc-luck-complementary-700: #009a28;
+  --color-custom-mc-luck-complementary-800: #008020;
+  --color-custom-mc-luck-complementary-900: #00661a;
+  --color-custom-mc-luck-complementary-950: #004010;
+  /* Spin Blitz additional colors */
+  --color-custom-spin-blitz-main-50: #fff1f2;
+  --color-custom-spin-blitz-main-100: #ffe4e6;
+  --color-custom-spin-blitz-main-200: #fecdd3;
+  --color-custom-spin-blitz-main-300: #fda4af;
+  --color-custom-spin-blitz-main-400: #fb7185;
+  --color-custom-spin-blitz-main-500: #f43f5e;
+  --color-custom-spin-blitz-main-600: #e11d48;
+  --color-custom-spin-blitz-main-700: #be123c;
+  --color-custom-spin-blitz-main-800: #9f1239;
+  --color-custom-spin-blitz-main-900: #881337;
+  --color-custom-spin-blitz-main-950: #4c0519;
+  --color-custom-spin-blitz-complementary-50: #eff6ff;
+  --color-custom-spin-blitz-complementary-100: #dbeafe;
+  --color-custom-spin-blitz-complementary-200: #bfdbfe;
+  --color-custom-spin-blitz-complementary-300: #93c5fd;
+  --color-custom-spin-blitz-complementary-400: #60a5fa;
+  --color-custom-spin-blitz-complementary-500: #3b82f6;
+  --color-custom-spin-blitz-complementary-600: #2f6fe5;
+  --color-custom-spin-blitz-complementary-700: #2256c0;
+  --color-custom-spin-blitz-complementary-800: #1e429f;
+  --color-custom-spin-blitz-complementary-900: #1e3a8a;
+  --color-custom-spin-blitz-complementary-950: #172554;
+  /* PlayFame additional colors. */
+  --color-custom-play-fame-main-100: #f0e7fa;
+  --color-custom-play-fame-main-300: #caa7ea;
+  --color-custom-play-fame-main-400: #ab73da;
+  --color-custom-play-fame-main-700: #4e187c;
+  --color-custom-play-fame-main-800: #3a125d;
+  --color-custom-play-fame-main-900: #2a0d44;
+  --color-custom-play-fame-main-950: #1d092f;
+  /* Hello Millions additional colors */
+  --color-custom-hello-millions-main-300: #dcf254;
+  --color-custom-hello-millions-complementary-500: #fe494a;
+  --color-custom-hello-millions-complementary-950: #561415;
+  /* Transparent colors */
+  --color-custom-transparent-white-50: #ffffff0d;
+  --color-custom-transparent-white-100: #ffffff1a;
+  --color-custom-transparent-white-200: #ffffff33;
+  --color-custom-transparent-white-300: #ffffff4d;
+  --color-custom-transparent-white-400: #ffffff66;
+  --color-custom-transparent-white-500: #ffffff80;
+  --color-custom-transparent-white-600: #ffffff99;
+  --color-custom-transparent-white-700: #ffffffb2;
+  --color-custom-transparent-white-800: #ffffffcc;
+  --color-custom-transparent-white-900: #ffffffe5;
+  --color-custom-transparent-white-950: #fffffff2;
+  --color-custom-transparent-black-50: #0000000d;
+  --color-custom-transparent-black-100: #0000001a;
+  --color-custom-transparent-black-200: #00000033;
+  --color-custom-transparent-black-300: #0000004d;
+  --color-custom-transparent-black-400: #00000066;
+  --color-custom-transparent-black-500: #00000080;
+  --color-custom-transparent-black-600: #00000099;
+  --color-custom-transparent-black-700: #000000b2;
+  --color-custom-transparent-black-800: #000000cc;
+  --color-custom-transparent-black-900: #000000e5;
+  --color-custom-transparent-black-950: #000000f2;
+  /* Border width and radius */
+  --border-width-border-0: 0px;
+  --border-width-border-1: 1px;
+  --border-width-border-2: 2px;
+  --border-width-border-4: 4px;
+  --radius-rounded-none: 0;
+  --radius-rounded-2: calc(var(--spacing) * 0.5);
+  --radius-rounded-4: calc(var(--spacing) * 1);
+  --radius-rounded-6: calc(var(--spacing) * 1.5);
+  --radius-rounded-8: calc(var(--spacing) * 2);
+  --radius-rounded-12: calc(var(--spacing) * 3);
+  --radius-rounded-16: calc(var(--spacing) * 4);
+  --radius-rounded-20: calc(var(--spacing) * 5);
+  --radius-rounded-24: calc(var(--spacing) * 6);
+  --radius-rounded-28: calc(var(--spacing) * 7);
+  --radius-rounded-32: calc(var(--spacing) * 8);
+  --radius-rounded-36: calc(var(--spacing) * 9);
+  --radius-rounded-40: calc(var(--spacing) * 10);
+  --radius-rounded-44: calc(var(--spacing) * 11);
+  --radius-rounded-48: calc(var(--spacing) * 12);
+  --radius-rounded-52: calc(var(--spacing) * 13);
+  --radius-rounded-56: calc(var(--spacing) * 14);
+  --radius-rounded-full: calc(infinity * 1px);
+}

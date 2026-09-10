@@ -1,0 +1,85 @@
+# Takes visual baselines on the same runner that compares against them.
+#
+# `pnpm visual:update` on a developer machine is not a way to refresh the shared
+# `prod` set: a screenshot carries the font rasterisation of the machine that took
+# it, and the `visual` job in ci.yml compares on `ubuntu-latest`. A set taken on
+# macOS turns that job red for every shot at once, with no component change behind
+# it. This job runs the update where the comparison happens.
+#
+# It does not commit. The updated PNGs come back as an artifact to unpack over the
+# working tree and stage by hand, so what lands in a commit stays a human decision
+# — and so the diff gets looked at, which is the entire point of a baseline.
+name: Visual Baselines
+
+on:
+  workflow_dispatch:
+    inputs:
+      specs:
+        description: 'Spec files to limit the run to, space-separated (e.g. "badge.tag.visual stepper.tag.visual"). Empty runs all of them.'
+        required: false
+        default: ""
+
+jobs:
+  baselines:
+    name: Take Baselines
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v6
+
+      - name: Setup Node
+        uses: actions/setup-node@v7
+        with:
+          node-version: 24.14.0
+          cache: pnpm
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Build themes
+        run: pnpm --filter @ui/themes build
+
+      - name: Install Playwright Chromium
+        run: pnpm --filter storybook-web exec playwright install chromium
+
+      # `visual:update` passes --update-snapshots=changed, so a baseline that
+      # already matches is left alone and only the moved and missing ones are
+      # written. That keeps the artifact — and the diff to review — down to what
+      # actually changed.
+      - name: Take baselines
+        run: pnpm visual:update ${{ inputs.specs }}
+
+      # The log is where you find out how big this is before downloading anything.
+      # `--porcelain` over the snapshots path names every file that moved; a run
+      # that reports nothing means the committed set was already correct.
+      - name: Report what moved
+        if: always()
+        run: |
+          echo "### Baselines written" >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git status --porcelain -- apps/storybook-web/playwright/snapshots >> "$GITHUB_STEP_SUMMARY"
+          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git status --porcelain -- apps/storybook-web/playwright/snapshots
+
+      - name: Upload baselines
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines
+          path: apps/storybook-web/playwright/snapshots/prod/
+          retention-days: 7
+
+      # Uploaded even on success: a story whose box differs between platforms
+      # fails at "size mismatch" rather than on a threshold, and no baseline is
+      # written for it, so the report is the only place that says which.
+      - name: Upload report
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: visual-baselines-report
+          path: apps/storybook-web/playwright/reports/
+          retention-days: 7

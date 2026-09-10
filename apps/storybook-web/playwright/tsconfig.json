@@ -1,0 +1,15 @@
+{
+  // Exists for editors, not for the build.
+  //
+  // `playwright/` is type-checked by `../tsconfig.lint.json`, which is what
+  // `pnpm typecheck` runs — but that file is not in the root tsconfig's
+  // `references`, and an editor resolves a file's options by walking up to the
+  // nearest `tsconfig.json` and reading its `include`. Finding no project that
+  // claims `playwright/`, it fell back to default options with no `node` types and
+  // reported `process` as undefined in a file the CLI compiles cleanly.
+  //
+  // Extending the lint config rather than restating its options keeps one source
+  // of truth: the types and lib this directory needs are declared once, there.
+  "extends": "../tsconfig.lint.json",
+  "include": ["."]
+}

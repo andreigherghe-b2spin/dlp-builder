@@ -1,5 +1,0 @@
-[tools]
-node = "24.14.0"
-pnpm = "10.33.2"
-ruby = "3.4.4"
-"gem:cocoapods" = "1.16.2"

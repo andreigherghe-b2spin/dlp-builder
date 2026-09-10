@@ -1,5 +1,0 @@
-@import "tailwindcss";
-@import "uniwind";
-
-@import "../../../packages/uikit-themes/dist/storybook.css";
-@source '../../../packages/uikit-native/src';

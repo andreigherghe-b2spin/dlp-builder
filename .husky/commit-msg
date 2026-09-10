@@ -1,5 +1,0 @@
-# Conventional Commits + a Jira key. The key is inherited from the branch name
-# when the message omits it, so the common case needs no thought.
-#
-# Bypass for a throwaway commit: git commit --no-verify
-sh scripts/git-hooks/check-commit-msg.sh "$1"
